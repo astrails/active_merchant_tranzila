@@ -1,3 +1,4 @@
+require 'active_merchant'
 module ActiveMerchant #:nodoc:
   module Billing #:nodoc:
     # This class implements the Tranzila (http://www.tranzila.com) Israeli payment gateway.

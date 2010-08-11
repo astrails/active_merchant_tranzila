@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'helper'
 require 'rubygems'
 require 'ruby-debug'
 
@@ -8,9 +8,9 @@ class TranzilaTest < Test::Unit::TestCase
 
     @credit_card = credit_card('4444333322221111')
     @amount = 100.00
-    
-    @options = { 
-      :cred_type => '1', 
+
+    @options = {
+      :cred_type => '1',
       :myid => '306122847',
       :ConfirmationCode => '0000000',
       :index => '11'
@@ -19,18 +19,18 @@ class TranzilaTest < Test::Unit::TestCase
 
   def test_successful(successful_response, action)
     @gateway.expects(:ssl_post).returns(successful_response)
-    
+
     assert response = @gateway.send(action, @amount, @credit_card, @options)
-    assert_instance_of Response, response 
+    assert_instance_of Response, response
     assert_success response
-    
+
     assert_equal '000', response.params['Response']
     assert response.test?
   end
 
   def test_unsuccessful(failed_response, action, opts = {})
     @gateway.expects(:ssl_post).returns(failed_response)
-    
+
     assert response = @gateway.send(action, @amount, @credit_card, @options)
     assert_failure response
     assert response.test?
@@ -40,7 +40,7 @@ class TranzilaTest < Test::Unit::TestCase
     test_successful(successful_purchase_response, :purchase)
   end
 
-  def test_unsuccessful_purchas
+  def test_unsuccessful_purchase
     test_unsuccessful(failed_purchase_response, :purchase)
   end
 
@@ -104,5 +104,5 @@ class TranzilaTest < Test::Unit::TestCase
   def successful_purchase_response
     "Response=000&ccno=4444333322221111&currency=1&cred_type=1&mycvv=123&expyear=15&supplier=test3&expmonth=09&myid=306122847&expdate=0915&sum=1.00&ConfirmationCode=0000000&index=88&Tempref=01300001&CVVstatus=3&Responsesource=0\n\n"
   end
-  
+
 end
