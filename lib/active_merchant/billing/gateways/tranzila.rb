@@ -399,7 +399,7 @@ module ActiveMerchant #:nodoc:
       end
 
       def default_parameters_hash(money, creditcard, options = {})
-        {
+        default_params = {
           :sum => amount(money),
           :ccno => creditcard.number,
           :expyear => creditcard.year.to_s[-2, 2],
@@ -419,7 +419,6 @@ module ActiveMerchant #:nodoc:
           :cred_type => options[:cred_type],
           :currency => @options[:currency],
           :myid => options[:myid],
-
           #transaction with monthly installments not supported yet
           #:fpay => options[:myid],
           #:spay => options[:spay],
@@ -428,6 +427,12 @@ module ActiveMerchant #:nodoc:
           #tranzila registered supplier (test3)
           :supplier => @options[:supplier]
         }
+
+        [:email, :company, :contact].each do |param|
+          default_params[param] = options[param].encode("windows-1255") if options.key?(param)
+        end
+
+        default_params
       end
 
       def to_query_s(hash)
