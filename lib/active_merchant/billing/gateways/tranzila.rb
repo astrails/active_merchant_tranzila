@@ -427,7 +427,11 @@ module ActiveMerchant #:nodoc:
           #tranzila registered supplier (test3)
           :supplier => @options[:supplier]
         }
-        default_params[:email] = options[:email] if options.key?(:email)
+
+        [:email, :company, :contact].each do |param|
+          default_params[param] = options[param].encode("windows-1255") if options.key?(param)
+        end
+
         default_params
       end
 
